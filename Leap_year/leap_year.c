@@ -3,7 +3,7 @@
 
 void main(){
     int year;
-    //clrscr();
+    clrscr();
     printf("Enter year: ");
     scanf("%d",&year);
     if(year % 400 == 0){
@@ -18,5 +18,5 @@ void main(){
     else{
         printf("%d is not a leap year.",year);
     }
-    //getch();
+    getch();
 }
