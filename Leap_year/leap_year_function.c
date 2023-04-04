@@ -22,7 +22,7 @@ void leap_year(){
     else{
         printf("%d is not a leap year.\n",year);
     }
-    printf("Whether you further want check?        (y/n)\n");
+    printf("Whether you further want to check?        (y/n)\n");
     fflush(stdin);    
     scanf("%c",&opt);
     if (opt == 'y'){
