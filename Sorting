@@ -1,0 +1,249 @@
+/*
+ * This program can be used to implement various Sorting Method
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 20
+
+//******************************************************** Function Declearation *************************************************
+void printArray(int[], int);
+void swap(int[], int, int);
+void BubbleSort(int[], int);
+void SelectionSort(int[], int);
+void InsertationSort(int[], int);
+void MergeSort(int[], int, int);
+void Merge_Sorted_SubArray(int[MAX], int, int, int, int);
+void PartitionArray(int[], int, int, int *);
+void QuickSort(int[], int, int);
+
+//******************************************************** Main Function *********************************************************
+void main()
+{
+    int arr[MAX], size, i, option, beg, end;
+    printf("\nEnter the size of Array:  ");
+    scanf("%d", &size);
+    printf("\nEnter elements of Array: ");
+    for (i = 0; i < size; i++)
+    {
+        scanf("%d", &arr[i]);
+    }
+    printf("Before Sorted:\n");
+    printArray(arr, size);
+    printf("\nSelect Sorting Method:\n");
+    printf("1. Bubble Sort\n2. Selection Sort\n3. Insertation Sort\n4. Merge Sort\n5. Quick Sort\n");
+    scanf("%d", &option);
+    switch (option)
+    {
+    case 1:
+        BubbleSort(arr, size);
+        break;
+    case 2:
+        SelectionSort(arr, size); // Function Call
+        break;
+    case 3:
+        InsertationSort(arr, size);
+        break;
+    case 4:
+    {
+        beg = 0;
+        end = size - 1;
+        MergeSort(arr, beg, end);
+        printf("After Sorting:\n");
+        printArray(arr, size);
+        break;
+    }
+    case 5:
+    {
+        beg = 0;
+        end = size - 1;
+        QuickSort(arr, beg, end);
+        printf("After Sorting:\n");
+        printArray(arr, size);
+        break;
+    }
+    }
+}
+
+//******************************************************** Print Function Defination *********************************************************
+void printArray(int arr[], int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        printf("%d ", arr[i]);
+    }
+}
+
+//******************************************************** Swaping Function Defination *********************************************************
+
+void swap(int arr[], int a, int b)
+{
+    int temp;
+    temp = arr[a];
+    arr[a] = arr[b];
+    arr[b] = temp;
+}
+
+//******************************************************** Bubble Sort Function Defination *********************************************************
+void BubbleSort(int arr[], int size)
+{
+    int i, j, temp;
+    for (i = 1; i < size; i++)
+    {
+        for (j = 0; j < size - i; j++)
+        {
+            if (arr[j + 1] < arr[j])
+            {
+                swap(arr, j + 1, j);
+            }
+        }
+    }
+    printf("After Sorting:\n");
+    printArray(arr, size);
+}
+
+//******************************************************** Selection Sort Function Defination *********************************************************
+void SelectionSort(int arr[], int size)
+{
+    int small, loc, temp, i, j;
+    for (i = 0; i < size; i++)
+    {
+        small = arr[i];
+        loc = i;
+        for (j = i; j < size; j++)
+        {
+            if (arr[j] < small)
+            {
+                small = arr[j];
+                loc = j;
+            }
+        }
+        if (loc != i - 1)
+        {
+            swap(arr, i, loc);
+        }
+    }
+    printf("After Sorting:\n");
+    printArray(arr, size);
+}
+
+//******************************************************** Insertation Sort Function Defination *********************************************************
+void InsertationSort(int arr[], int size)
+{
+    int i, j, temp;
+    for (i = 1; i <= size - 1; i++)
+    {
+        temp = arr[i];
+        j = i - 1;
+        while ((arr[j] > temp) && j >= 0) // Check every privous element untill j != -1
+        {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = temp;
+    }
+    printf("After Sorting:\n");
+    printArray(arr, size);
+}
+
+//******************************************************** Merge Sort Function Defination *********************************************************
+
+void MergeSort(int arr[], int beg, int end)
+{
+    int mid;
+    if (beg < end)
+    {
+        mid = (beg + end) / 2;
+        MergeSort(arr, beg, mid); // It will divide the Array untill it contain only one element
+        MergeSort(arr, mid + 1, end);
+        Merge_Sorted_SubArray(arr, beg, mid, mid + 1, end); // It will merge every single sorted element
+    }
+}
+
+//          ***************************************** Merge Sorted Into Sub Array ********************************************************
+void Merge_Sorted_SubArray(int arr[MAX], int l1, int l2, int r1, int r2)
+{
+    int na = l1, nc = l1, nb = r1;
+    int C[MAX];
+    while ((na <= l2) && (nb <= r2))
+    {
+        if (arr[na] < arr[nb])
+        {
+            C[nc] = arr[na];
+            na++;
+        }
+        else
+        {
+            C[nc] = arr[nb];
+            nb++;
+        }
+        nc++;
+    }
+    if (na > l2) // Remaining elements of Right Sub Array
+    {
+        while (nb <= r2)
+        {
+            C[nc] = arr[nb];
+            nb++;
+            nc++;
+        }
+    }
+    else
+    {
+        while (na <= l2) // Remaining elements of Left Sub Array
+        {
+            C[nc] = arr[na];
+            na++;
+            nc++;
+        }
+    }
+    for (int i = l1; i <= r2; i++) // copy of sorted array
+    {
+        arr[i] = C[i];
+    }
+}
+
+//******************************************************** Quick Sort Function Defination *********************************************************
+
+void PartitionArray(int arr[], int beg, int end, int *pivot)
+{
+    int left, right, temp, flag;
+    left = *pivot = beg;
+    right = end;
+    flag = 1;
+    while (flag)
+    {
+        while ((arr[*pivot] <= arr[right]) && (*pivot != right))
+            right--;
+        if (*pivot == right)
+            flag = 0;
+        else if (arr[*pivot] > arr[right])
+        {
+            swap(arr, *pivot, right);
+            *pivot = right;
+        }
+        if (flag)
+        {
+            while ((arr[*pivot] >= arr[left]) && (*pivot != left))
+                left++;
+            if (*pivot == left)
+                flag = 0;
+            else if (arr[*pivot] < arr[left])
+            {
+                swap(arr, *pivot, left);
+                *pivot = left;
+            }
+        }
+    }
+}
+
+void QuickSort(int arr[], int beg, int end)
+{
+    int pivot;
+    if (beg < end)
+    {
+        PartitionArray(arr, beg, end, &pivot);
+        QuickSort(arr, beg, pivot - 1);
+        QuickSort(arr, pivot + 1, end);
+    }
+}
